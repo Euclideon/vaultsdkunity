@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 namespace Vault
 {
-public enum vdkProjectGeometryType { 
+  public enum vdkProjectGeometryType { 
     //These are the geometry types for nodes 
     vdkPGT_None, //!<There is no geometry associated with this node.
     vdkPGT_Point, //!<pCoordinates is a single 3D position
@@ -20,9 +18,9 @@ public enum vdkProjectGeometryType {
  public enum vdkProjectNodeType
   {
     /*
-This represents the type of data stored in the node.
+    This represents the type of data stored in the node.
 
-Note
+    Note
 
     The itemtypeStr in the vdkProjectNode is a string version. This enum serves to simplify the reading of standard types. The the string in brackets at the end of the comment is the string.
      */
@@ -47,7 +45,7 @@ Note
 
         This struct is exposed to avoid having a huge API of accessor functions but it should be treated as read only with the exception of pUserData. Making changes to the internal data will cause issues syncronising data
 
-  */
+    */
     [MarshalAs(UnmanagedType.ByValArray, SizeConst = 37)]
     public readonly char[] UUID; //!<Unique identifier for this node “id”.
 
@@ -104,26 +102,26 @@ Note
     }
 
 
-  //Create an empty, local only, instance of vdkProject.
+    //Create an empty, local only, instance of vdkProject.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProject_CreateLocal(ref IntPtr ppProject, string pName);
-  //Create a local only instance of vdkProject filled in with the contents of a GeoJSON string.
+    private static extern vdkError vdkProject_CreateLocal(ref IntPtr ppProject, string pName);
+    //Create a local only instance of vdkProject filled in with the contents of a GeoJSON string.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProject_LoadFromMemory(ref IntPtr ppProject, string pGeoJSON);
+    private static extern vdkError vdkProject_LoadFromMemory(ref IntPtr ppProject, string pGeoJSON);
     //Destroy the instance of the project.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProject_Release(ref IntPtr ppProject);
+    private static extern vdkError vdkProject_Release(ref IntPtr ppProject);
     //Export a project to a GeoJSON string in memory.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProject_WriteToMemory(IntPtr pProject, ref IntPtr ppMemory);
+    private static extern vdkError vdkProject_WriteToMemory(IntPtr pProject, ref IntPtr ppMemory);
     //Get the project root node.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProject_GetProjectRoot(IntPtr pProject, ref IntPtr ppRootNode);
+    private static extern vdkError vdkProject_GetProjectRoot(IntPtr pProject, ref IntPtr ppRootNode);
     //Get the state of unsaved local changes
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProject_HasUnsavedChanges(IntPtr pProject);
+    private static extern vdkError vdkProject_HasUnsavedChanges(IntPtr pProject);
     [DllImport(VaultSDKLibrary.name)]
-  private static extern string vdkProject_GetTypeName(vdkProjectNodeType itemtype);
+    private static extern string vdkProject_GetTypeName(vdkProjectNodeType itemtype);
 
 
 	}
@@ -138,65 +136,61 @@ Note
       this.nodeData = (vdkProjectNode) Marshal.PtrToStructure(nodeAddr, typeof(vdkProjectNode));
     }
 
-    public void RemoveChild() 
-    {
-    
-    }
 
     //Create a node in a project
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_Create(IntPtr pProject, IntPtr ppNode, ref vdkProjectNode pParent, string pType, string pName, string pURI, IntPtr pUserData);
+    private static extern vdkError vdkProjectNode_Create(IntPtr pProject, IntPtr ppNode, ref vdkProjectNode pParent, string pType, string pName, string pURI, IntPtr pUserData);
     //Move a node to reorder within the current parent or move to a different parent.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_MoveChild(IntPtr pProject, ref vdkProjectNode pCurrentParent, ref vdkProjectNode pNewParent, ref vdkProjectNode pNode, ref vdkProjectNode pInsertBeforeChild);
+    private static extern vdkError vdkProjectNode_MoveChild(IntPtr pProject, ref vdkProjectNode pCurrentParent, ref vdkProjectNode pNewParent, ref vdkProjectNode pNode, ref vdkProjectNode pInsertBeforeChild);
     //Remove a node from the project.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_RemoveChild(IntPtr pProject, ref vdkProjectNode pParentNode, ref vdkProjectNode pNode);
+    private static extern vdkError vdkProjectNode_RemoveChild(IntPtr pProject, ref vdkProjectNode pParentNode, ref vdkProjectNode pNode);
     //Set the human readable name of a node.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_SetName(IntPtr pProject, ref vdkProjectNode pNode, string pNodeName);
+    private static extern vdkError vdkProjectNode_SetName(IntPtr pProject, ref vdkProjectNode pNode, string pNodeName);
     //Set the URI of a node.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_SetURI(IntPtr pProject, ref vdkProjectNode pNode, string pNodeURI);
+    private static extern vdkError vdkProjectNode_SetURI(IntPtr pProject, ref vdkProjectNode pNode, string pNodeURI);
     //Set the new geometry of a node.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_SetGeometry(IntPtr pProject, ref vdkProjectNode pNode, vdkProjectGeometryType nodeType, int geometryCount, ref double pCoordinates);
+    private static extern vdkError vdkProjectNode_SetGeometry(IntPtr pProject, ref vdkProjectNode pNode, vdkProjectGeometryType nodeType, int geometryCount, ref double pCoordinates);
     //Get a metadata item of a node as an integer.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_GetMetadataInt(ref vdkProjectNode pNode, string pMetadataKey, ref Int32 pInt, Int32 defaultValue);
+    private static extern vdkError vdkProjectNode_GetMetadataInt(ref vdkProjectNode pNode, string pMetadataKey, ref Int32 pInt, Int32 defaultValue);
     //Set a metadata item of a node from an integer.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_SetMetadataInt(ref vdkProjectNode pNode, string pMetadataKey, Int32 iValue);
+    private static extern vdkError vdkProjectNode_SetMetadataInt(ref vdkProjectNode pNode, string pMetadataKey, Int32 iValue);
     //Get a metadata item of a node as an unsigned integer.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_GetMetadataUint(ref vdkProjectNode pNode, string pMetadataKey, ref UInt32 pInt, UInt32 defaultValue);
+    private static extern vdkError vdkProjectNode_GetMetadataUint(ref vdkProjectNode pNode, string pMetadataKey, ref UInt32 pInt, UInt32 defaultValue);
     //Set a metadata item of a node from an unsigned integer.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_SetMetadataUint(ref vdkProjectNode pNode, string pMetadataKey, UInt32 iValue);
+    private static extern vdkError vdkProjectNode_SetMetadataUint(ref vdkProjectNode pNode, string pMetadataKey, UInt32 iValue);
     //Get a metadata item of a node as a 64 bit integer.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_GetMetadataInt64(ref vdkProjectNode pNode, string pMetadataKey, ref Int64 pInt64, Int64 defaultValue);
+    private static extern vdkError vdkProjectNode_GetMetadataInt64(ref vdkProjectNode pNode, string pMetadataKey, ref Int64 pInt64, Int64 defaultValue);
     //Set a metadata item of a node from a 64 bit integer.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_SetMetadataInt64(ref vdkProjectNode pNode, string pMetadataKey, Int64 i64Value);
+    private static extern vdkError vdkProjectNode_SetMetadataInt64(ref vdkProjectNode pNode, string pMetadataKey, Int64 i64Value);
     //Get a metadata item of a node as a double.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_GetMetadataDouble(ref vdkProjectNode pNode, string pMetadataKey, ref double pDouble, double defaultValue);
+    private static extern vdkError vdkProjectNode_GetMetadataDouble(ref vdkProjectNode pNode, string pMetadataKey, ref double pDouble, double defaultValue);
     //Set a metadata item of a node from a double.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_SetMetadataDouble(ref vdkProjectNode pNode, string pMetadataKey, double doubleValue);
+    private static extern vdkError vdkProjectNode_SetMetadataDouble(ref vdkProjectNode pNode, string pMetadataKey, double doubleValue);
     //Get a metadata item of a node as an boolean.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_GetMetadataBool(ref vdkProjectNode pNode, string pMetadataKey, ref bool pBool, bool defaultValue);
+    private static extern vdkError vdkProjectNode_GetMetadataBool(ref vdkProjectNode pNode, string pMetadataKey, ref bool pBool, bool defaultValue);
     //Set a metadata item of a node from an boolean.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_SetMetadataBool(ref vdkProjectNode pNode, string pMetadataKey, bool boolValue);
+    private static extern vdkError vdkProjectNode_SetMetadataBool(ref vdkProjectNode pNode, string pMetadataKey, bool boolValue);
     //Get a metadata item of a node as a string.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_GetMetadataString(ref vdkProjectNode pNode, string pMetadataKey, ref string ppString, string pDefaultValue);
+    private static extern vdkError vdkProjectNode_GetMetadataString(ref vdkProjectNode pNode, string pMetadataKey, ref string ppString, string pDefaultValue);
     //Set a metadata item of a node from a string.
     [DllImport(VaultSDKLibrary.name)]
-  private static extern vdkError vdkProjectNode_SetMetadataString(ref vdkProjectNode pNode, string pMetadataKey, string pString);
+    private static extern vdkError vdkProjectNode_SetMetadataString(ref vdkProjectNode pNode, string pMetadataKey, string pString);
     //Get the standard type string name for an itemtype
   }
 }
