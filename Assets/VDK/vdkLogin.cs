@@ -24,12 +24,12 @@ namespace Vault
         public static string SavedPasswordKey = "VDKPassword";
         public static void Login()
         {
-             //For builds, set in login page
-             vaultUsername = GlobalVDKContext.SavedUsernameKey;
-             vaultPassword = GlobalVDKContext.SavedPasswordKey;
+            //For builds, set in login page
+            vaultUsername = GlobalVDKContext.SavedUsernameKey;
+            vaultPassword = GlobalVDKContext.SavedPasswordKey;
 
             // No longer using player prefs as they save to disk persistantly
-          #if UNITY_EDITOR
+#if UNITY_EDITOR
 
             vaultUsername = EditorPrefs.GetString(SavedUsernameKey);
             vaultPassword = EditorPrefs.GetString(SavedPasswordKey);
@@ -37,6 +37,8 @@ namespace Vault
 //            Debug.Log("Attempting to login with: " + vaultUsername + " / " + vaultPassword);
             if (!GlobalVDKContext.isCreated)
             {
+                if (Application.platform == RuntimePlatform.Android)
+                    vContext.IgnoreCertificateVerification(true);
                 try
                 {
                     Debug.Log("Attempting to resume Euclideon Vault session");
@@ -48,7 +50,13 @@ namespace Vault
                 catch (System.Exception e)
                 {
                     Debug.Log(e.ToString() + "Logging in to Euclideon Vault server");
+                  try
+                  {
                     GlobalVDKContext.vContext.Connect(vaultServer, "Unity", vaultUsername, vaultPassword);
+                  }
+                  catch(System.Exception f) {
+                    Debug.Log("Login Failed: " + f.ToString());
+                  }
                     vContext.RequestLicense(LicenseType.Render);
                     GlobalVDKContext.isCreated = true;
                     Debug.Log("Logged in!");
