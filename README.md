@@ -1,3 +1,5 @@
+> This repository is no longer active after the migration from Vault SDK to udSDK. Please use the [udSDKUnity](https://github.com/Euclideon/udSDKUnity) moving forward.
+
 # VDK Unity
 
 This project demonstrates the use of Euclideon Vault developer Kit (Vault SDK) with the Unity Real Time Development Platform. 
